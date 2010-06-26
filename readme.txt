@@ -42,6 +42,9 @@ This section describes how to install the plugin and get it working.
 3. Sites Edit: Misc Site Options
 
 == Changelog ==
+= 3.0.1 = 
+
+deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
 * WP3.0 Multisite enabled
@@ -50,6 +53,9 @@ This section describes how to install the plugin and get it working.
 * WPMU version no longer supported.
 
 == Upgrade Notice ==
+= 3.0.1 = 
+
+deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
 WP3.0 Multisite enabled

@@ -3,7 +3,7 @@
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
-Version: 3.0
+Version: 3.0.1
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
@@ -26,6 +26,7 @@ Notes:
 2.9.2 added "class"	ds_more_privacy_options to avoid function name collisions
 2.9.3 added noindex, privacy_ping_filter, and do_robots fixes
 3.0 added filter to admin header link, tweaked for WP3.0 multisite 
+3.0.1 deprecated $user_level check replaced with is_user_logged_in()
 
 TODO
 To allow everyone who is on-campus into the blog, while requiring those off-campus to log in. Modify function ds_users_authenticator().
@@ -156,8 +157,7 @@ class ds_more_privacy_options {
 	//---Functions for Registered Community Users Only Blog-------------------//
 	//------------------------------------------------------------------------//
 	function ds_users_authenticator () {
-		global $user_level;
-			if ( !isset($user_level) ) {
+			if ( !is_user_logged_in() ) {
 	      		if( is_feed()) {
     	       	$credentials = array();
         	   	$credentials['user_login'] = $_SERVER['PHP_AUTH_USER'];
@@ -221,8 +221,7 @@ class ds_more_privacy_options {
 	//---Functions for Members Only Blog---------------------------------------//
 	//------------------------------------------------------------------------//
 	function ds_members_authenticator () {
-		global $user_level, $current_user;
-		if (( isset($user_level) ) && (!current_user_can('read'))) {
+		if (( is_user_logged_in() ) && (!current_user_can('read'))) {
 			$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
 						<p>Wait 5 seconds or 
@@ -258,8 +257,7 @@ class ds_more_privacy_options {
 	//---Functions for Admins Only Blog--------------------------------------//
 	//---WARNING: member users, if they exist, still see the backend---------//
 	function ds_admins_authenticator () {
-	global $user_level;
-		if (( isset($user_level) ) && (!current_user_can('manage_options'))) {
+		if (( is_user_logged_in() ) && (!current_user_can('manage_options'))) {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
 							<p>Wait 5 seconds or 
