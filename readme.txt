@@ -1,5 +1,5 @@
 === More Privacy Options ===
-Contributors: D Sader
+Contributors: dsader
 Donate link: http://dsader.snowotherway.org
 Tags: privacy, private blog, multisite
 Requires at least: 3.0
