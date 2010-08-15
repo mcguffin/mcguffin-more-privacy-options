@@ -3,8 +3,8 @@
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
-Version: 3.0.1
-Author: dsader
+Version: 3.0.1.1
+Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
  This program is free software; you can redistribute it and/or modify
@@ -16,17 +16,6 @@ Author URI: http://dsader.snowotherway.org/
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
-Notes:
-2.7 added a Sitewide "Users Only" switch to SiteAdmin-->Options, props Boonika
-2.8 added action hook for writing robots.txt exclusions, props Zinj Guo 
-	http://en.wikipedia.org/wiki/Robots.txt
-2.9 tweaked for WPMU 2.7
-2.9.1 added feed authentication so registered_users get feeds from feed readers such as Safari/Mail. Props: Greg
-2.9.2 added "class"	ds_more_privacy_options to avoid function name collisions
-2.9.3 added noindex, privacy_ping_filter, and do_robots fixes
-3.0 added filter to admin header link, tweaked for WP3.0 multisite 
-3.0.1 deprecated $user_level check replaced with is_user_logged_in()
 
 TODO
 To allow everyone who is on-campus into the blog, while requiring those off-campus to log in. Modify function ds_users_authenticator().
@@ -43,19 +32,54 @@ else {
 ...
 }
 
+Similarily:
+A plugin to allow login from only certain ip:
+http://w-shadow.com/blog/2008/11/07/restrict-login-by-ip-a-wordpress-plugin/
+A plugin to ban certain ip:
+http://wordpress.org/extend/plugins/wp-ban/
+
 TODO protect files/attachments/images uploaded to protected blogs(.htaccess rewrites needed)
 Pluginspiration: http://plugins.svn.wordpress.org/private-files/trunk/privatefiles.php
 
-SSL Workaround
-ctrl-alt-esc now trying this instead:
-header('Location: ' . get_settings('siteurl') . '/wp-login.php?redirect_to=' . urlencode((is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
-It appears to be working correctly on both domain and directory installs.
 */
 class ds_more_privacy_options {
 
 	function ds_more_privacy_options() {
 	}
+	function ds_mail_super_admin() {
+		global $wpdb, $blogname, $current_blog;
+			$blog_id = $wpdb->blogid;
+			$blog_public_old = $current_blog->public;
+			$blog_public_new = get_blog_option($blog_id,'blog_public');
+			
+			$from_old = $this->ds_mail_super_admin_messages($blog_public_old);
+						
+			$to_new = $this->ds_mail_super_admin_messages($blog_public_new);			
 
+			$email =  stripslashes( get_site_option('admin_email') );
+			$subject = 'Blog '.$blogname.'('.$blog_id.') changed privacy setting from '.$from_old.' to '.$to_new;
+			$message = 'Blog '.$blogname.'('.$blog_id.') changed privacy setting from '.$from_old.' to '.$to_new;
+     	mail($email, $subject , $message);
+	}
+	function ds_mail_super_admin_messages($blog_public) {
+			if ( '1' == $blog_public ) {
+				return 'Visible(1)';
+			}
+			if ( '0' == $blog_public ) {
+				return 'No Search(0)';
+			}
+			if ( '-1' == $blog_public ) {
+				return 'Network Users Only(-1)';
+			}
+			if ( '-2' == $blog_public ) {
+				return 'Site Members Only(-2)';
+			}
+			if ( '-3' == $blog_public ) {
+				return 'Site Admins Only(-3)';
+			}
+	}
+		
+	
 	function do_robots() {
 		remove_action('do_robots', 'do_robots');
 
@@ -137,19 +161,20 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	//---Functions hooked into blog privacy selector(options-privacy.php)-----//
 	//------------------------------------------------------------------------//
-	function add_privacy_options($options) { 
-		global $current_site; 
+
+ function add_privacy_options($options) { 
+		global $blogname,$current_site; 
 		$blog_name = get_bloginfo('name', 'display');
 ?>
 <br/>
-			<input id="blog-private" type="radio" name="blog_public" value="-1" <?php checked('-1', get_option('blog_public')); ?> />
-			<label for="blog-private"><?php _e('I would like my blog to be visible only to registered users of '); ?><?php echo esc_attr( $current_site->site_name ) ?></label>
+			<input id="blog-private-1" type="radio" name="blog_public" value="-1" <?php checked('-1', get_option('blog_public')); ?> />
+			<label for="blog-private-1"><?php _e('I would like my blog to be visible only to registered users of '); ?><?php echo esc_attr( $current_site->site_name ) ?></label>
 <br/>
-			<input id="blog-private" type="radio" name="blog_public" value="-2" <?php checked('-2', get_option('blog_public')); ?> />
-			<label for="blog-private"><?php _e('I would like my blog to be visible only to <a href="users.php">registered users I add</a> to '); ?>"<?php echo $blog_name; ?>"</label>
+			<input id="blog-private-2" type="radio" name="blog_public" value="-2" <?php checked('-2', get_option('blog_public')); ?> />
+			<label for="blog-private-2"><?php _e('I would like my blog to be visible only to <a href="users.php">registered users I add</a> to '); ?>"<?php echo $blog_name; ?>"</label>
 <br/>
-			<input id="blog-private" type="radio" name="blog_public" value="-3" <?php checked('-3', get_option('blog_public')); ?> />
-			<label for="blog-private">I would like "<?php echo $blog_name; ?>" to be visible only to Admins.</label>
+			<input id="blog-private-3" type="radio" name="blog_public" value="-3" <?php checked('-3', get_option('blog_public')); ?> />
+			<label for="blog-private-3">I would like "<?php echo $blog_name; ?>" to be visible only to Admins.</label>
 	<?php 
 	}
 
@@ -174,15 +199,16 @@ class ds_more_privacy_options {
 	       } else {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . get_settings('siteurl') . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
         	header("Status: 302 Moved Temporarily");
 			exit();
 			}
 		}
 	}
 	function registered_users_login_message () {
+		global $current_site;
 		echo '<p>';
-		echo '' . bloginfo(name) . ' can be viewed by registered users of this community only.';
+		echo '' . bloginfo(name) . ' can be viewed by <a href="' . apply_filters( 'wp_signup_location', network_home_url( 'wp-signup.php' ) ) . '">Registered Network Users of ' . $current_site->site_name .'</a>.';
 		echo '</p><br/>';
 	}
 	function registered_users_header_title () {
@@ -198,19 +224,36 @@ class ds_more_privacy_options {
 	//---Shortcut Function for logged in users to add timed "refresh"--------//
 	//------------------------------------------------------------------------//
 	function ds_login_header() {
+	global $error, $is_iphone, $interim_login, $current_site;
 			nocache_headers();
 			header( 'Content-Type: text/html; charset=utf-8' );
 		?>
-		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" <?php if ( function_exists('language_attributes') ) language_attributes(); ?>>
-			<head>
-				<title><?php _e("Private Blog Message"); ?></title>
-				<meta http-equiv="refresh" content="5;URL=<?php echo get_settings('siteurl'); ?>/wp-login.php" />
-				<?php wp_admin_css( 'css/login' );
-				wp_admin_css( 'css/colors-fresh' );	?>				
-				<link rel="stylesheet" href="css/install.css" type="text/css" />
-				<?php do_action('login_head'); ?>
-			</head>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
+		<head>
+			<title><?php _e("Private Blog Message"); ?></title>
+				<meta http-equiv="refresh" content="8;URL=<?php echo home_url(); ?>/wp-login.php" />
+				<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
+		<?php
+		wp_admin_css( 'login', true );
+		wp_admin_css( 'colors-fresh', true );
+
+	if ( $is_iphone ) { ?>
+	<meta name="viewport" content="width=320; initial-scale=0.9; maximum-scale=1.0; user-scalable=0;" />
+	<style type="text/css" media="screen">
+	form { margin-left: 0px; }
+	#login { margin-top: 20px; }
+	</style>
+<?php
+	} elseif ( isset($interim_login) && $interim_login ) { ?>
+	<style type="text/css" media="all">
+	.login #login { margin: 20px auto; }
+	</style>
+<?php
+	}
+
+	do_action('login_head'); ?>
+</head>
 			<body class="login">
 				<div id="login">
 					<h1><a href="<?php echo apply_filters('login_headerurl', 'http://' . $current_site->domain . $current_site->path ); ?>" title="<?php echo apply_filters('login_headertitle', $current_site->site_name ); ?>"><span class="hide"><?php bloginfo('name'); ?></span></a></h1>
@@ -224,8 +267,8 @@ class ds_more_privacy_options {
 		if (( is_user_logged_in() ) && (!current_user_can('read'))) {
 			$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
-						<p>Wait 5 seconds or 
-							<a href="<?php echo get_settings('siteurl'); ?>/wp-login.php">click</a> to continue.</p>
+						<p>Wait 8 seconds or 
+							<a href="<?php echo home_url(); ?>/wp-login.php">click</a> to continue.</p>
 							<?php $this->registered_members_login_message (); ?>
 					</form>
 				</div>
@@ -236,14 +279,22 @@ class ds_more_privacy_options {
 		} elseif (!current_user_can('read')) {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . get_settings('siteurl') . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
         	header("Status: 302 Moved Temporarily");
 			exit();
 		}
 	}
 	function registered_members_login_message () {
+		global $current_site;
 		echo '<p>';
-		echo '' . bloginfo(name) . __(' can be viewed by members of this blog only.');
+		if(!is_user_logged_in()) {
+			echo '' . get_bloginfo('name') . __(' can be viewed by members of this blog only.');
+			echo '<br /><a href="' . apply_filters( 'wp_signup_location', network_home_url( 'wp-signup.php' ) ) . '">Register first as a Network User of ' . $current_site->site_name .'</a>.';
+		}
+		if(is_user_logged_in()) {
+		echo 'To become a member of the ' . get_bloginfo('name') . ' blog, contact <a href="mailto:' . str_replace( '@', ' AT ', get_option('admin_email')) . '?subject=' . get_bloginfo('name') . ' Blog Membership at ' . $current_site->site_name .'">' . str_replace( '@', ' AT ', get_option('admin_email')) . '</a>';
+
+		}
 		echo '</p><br/>';
 	}
 	function registered_members_header_title () {
@@ -260,8 +311,8 @@ class ds_more_privacy_options {
 		if (( is_user_logged_in() ) && (!current_user_can('manage_options'))) {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
-							<p>Wait 5 seconds or 
-								<a href="<?php echo get_settings('siteurl'); ?>/wp-login.php">click</a> to continue.</p>
+							<p>Wait 8 seconds or 
+								<a href="<?php echo home_url(); ?>/wp-login.php">click</a> to continue.</p>
 								<?php $this->registered_admins_login_message (); ?>
 						</form>
 					</div>
@@ -272,7 +323,7 @@ class ds_more_privacy_options {
 		} elseif (!current_user_can('manage_options')) {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . get_settings('siteurl') . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
         	header("Status: 302 Moved Temporarily");
 			exit();
 		}
@@ -330,7 +381,7 @@ if (isset($ds_more_privacy_options)) {
 //------------------------------------------------------------------------//
 //---Hooks-----------------------------------------------------------------//
 //------------------------------------------------------------------------//
-// SupreAdmin->Options
+// SuperAdmin->Options
 add_action( 'update_wpmu_options', array(&$ds_more_privacy_options, 'sitewide_privacy_update'));
 add_action( 'wpmu_options', array(&$ds_more_privacy_options, 'sitewide_privacy_options_page'));
 
@@ -341,6 +392,8 @@ add_action('wpmueditblogaction', array(&$ds_more_privacy_options, 'wpmu_blogs_ad
 
 // hook into options-privacy.php Dashboard->Settings->Privacy.
 add_action('blog_privacy_selector', array(&$ds_more_privacy_options, 'add_privacy_options'));
+// hook into signup form
+// add_action('signup_blogform', array(&$ds_more_privacy_options, 'add_privacy_options'));
 
 // all three add_privacy_option get a redirect and a message in the Login form
 		$number = intval(get_site_option('ds_sitewide_privacy'));
@@ -373,5 +426,9 @@ add_action('login_head', array(&$ds_more_privacy_options, 'noindex'),1);
 
 //no pings unless public either
 add_filter('option_ping_sites', array(&$ds_more_privacy_options, 'privacy_ping_filter'),1);
+//email SuperAdmin when privacy changes
+add_action( 'update_blog_public', array(&$ds_more_privacy_options,'ds_mail_super_admin'));
+
 }
+
 ?>

@@ -11,15 +11,29 @@ WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy a
 == Description ==
 Adds three more levels of privacy to the Options--Privacy page.
 
-1. Blog visible to any logged in community member.
+1. Blog visible to any logged in community member - "Network Users Only".
 
-2. Blog visible only to registered users of blog.
+2. Blog visible only to registered users of blog - "Blog Members Only".
 
-3. Blog visible only to administrators.
+3. Blog visible only to administrators - "Admins Only".
 
 Mulitsite SuperAdmin can set an override on blog privacy at "Network Privacy Selector" on SuperAdmin-Options page
 
 Multisite SuperAdmin can set privacy options at SuperAdmin-Sites-Edit under "Misc Site Options" as well.
+
+SuperAdmin receives an email when blog privacy changes.
+
+RSS feeds require authentication.
+
+robots.txt updates accordingly.
+
+Ping sites filters correctly.
+
+Privacy status reflected in Dashboard/Admin header.
+
+Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
+
+Login message has link to sign-up page of a "Network Users Only" blog or a link the blog admin email if user is logged in but not a member of a "Members Only" blog.
 
 == Installation ==
 
@@ -42,6 +56,17 @@ This section describes how to install the plugin and get it working.
 3. Sites Edit: Misc Site Options
 
 == Changelog ==
+= 3.0.1.1 =
+SuperAdmin receives an email when blog privacy changes.
+
+Privacy status reflected in Dashboard/Admin header.
+
+Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
+
+Login message has link to signup page if visitor is not logged or a link the blog admin email if user is logged in but not a member of a members only blog.
+
+noindex,nofollow correctly added to meta in wp_head and login_head
+ 
 = 3.0.1 = 
 
 deprecated $user_level check replaced with is_user_logged_in()
