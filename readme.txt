@@ -3,7 +3,7 @@ Contributors: dsader
 Donate link: http://dsader.snowotherway.org
 Tags: privacy, private blog, multisite, members only
 Requires at least: 3.0
-Tested up to: 3.0
+Tested up to: 3.0.1
 Stable tag: Trunk
 
 WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Just drop in mu-plugins.
