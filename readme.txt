@@ -1,7 +1,7 @@
 === More Privacy Options ===
 Contributors: dsader
 Donate link: http://dsader.snowotherway.org
-Tags: privacy, private blog, multisite
+Tags: privacy, private blog, multisite, members only
 Requires at least: 3.0
 Tested up to: 3.0
 Stable tag: Trunk
