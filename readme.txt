@@ -62,22 +62,22 @@ This section describes how to install the plugin and get it working.
 
 = 3.0.1.2 = 
 
-Supports filters to the login_url and wp_signup_location. 
+* Supports filters to the login_url and wp_signup_location. 
 
 = 3.0.1.1 =
-SuperAdmin receives an email when blog privacy changes.
+* SuperAdmin receives an email when blog privacy changes.
 
-Privacy status reflected in Dashboard/Admin header.
+* Privacy status reflected in Dashboard/Admin header.
 
-Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
+* Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
 
-Login message has link to signup page if visitor is not logged or a link the blog admin email if user is logged in but not a member of a members only blog.
+* Login message has link to signup page if visitor is not logged or a link the blog admin email if user is logged in but not a member of a members only blog.
 
-noindex,nofollow correctly added to meta in wp_head and login_head
+* noindex,nofollow correctly added to meta in wp_head and login_head
  
 = 3.0.1 = 
 
-deprecated $user_level check replaced with is_user_logged_in()
+* deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
 * WP3.0 Multisite enabled
@@ -88,14 +88,14 @@ deprecated $user_level check replaced with is_user_logged_in()
 == Upgrade Notice ==
 = 3.0.1.2 =
 
-Supports filters to the login_url and wp_signup_location. 
+* Supports filters to the login_url and wp_signup_location. 
 
 = 3.0.1 = 
 
-deprecated $user_level check replaced with is_user_logged_in()
+* deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
-WP3.0 Multisite enabled
+* WP3.0 Multisite enabled
 
 = 2.9.2 =
-WPMU version no longer supported.
+* WPMU version no longer supported.
