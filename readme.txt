@@ -61,10 +61,11 @@ This section describes how to install the plugin and get it working.
 == Changelog ==
 
 = 3.0.1.2 = 
-
+Added/Fixed:
 * Supports filters to the login_url and wp_signup_location. 
 
 = 3.0.1.1 =
+Added:
 * SuperAdmin receives an email when blog privacy changes.
 
 * Privacy status reflected in Dashboard/Admin header.
@@ -76,7 +77,7 @@ This section describes how to install the plugin and get it working.
 * noindex,nofollow correctly added to meta in wp_head and login_head
  
 = 3.0.1 = 
-
+Fixed:
 * deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
