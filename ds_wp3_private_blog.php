@@ -3,7 +3,7 @@
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
-Version: 3.0.1.1
+Version: 3.0.1.2
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
@@ -41,7 +41,24 @@ http://wordpress.org/extend/plugins/wp-ban/
 TODO protect files/attachments/images uploaded to protected blogs(.htaccess rewrites needed)
 Pluginspiration: http://plugins.svn.wordpress.org/private-files/trunk/privatefiles.php
 
+
+
+Extras to redirect login_url and wp_signup_location page
+
+function ds_my_login_page() {
+	$page = 'http://mysite.tld/login/';
+	return $page;
+}
+add_filter( 'login_url', 'ds_my_login_page' );
+
+function ds_my_signup_page() {
+	$page = 'http://mysite.tld/signup/';
+	return $page;
+}
+add_filter( 'wp_signup_location', 'ds_my_signup_page' );
+
 */
+
 class ds_more_privacy_options {
 
 	function ds_more_privacy_options() {
@@ -199,7 +216,7 @@ class ds_more_privacy_options {
 	       } else {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
         	header("Status: 302 Moved Temporarily");
 			exit();
 			}
@@ -232,7 +249,7 @@ class ds_more_privacy_options {
 	<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 		<head>
 			<title><?php _e("Private Blog Message"); ?></title>
-				<meta http-equiv="refresh" content="8;URL=<?php echo home_url(); ?>/wp-login.php" />
+				<meta http-equiv="refresh" content="8;URL=<?php echo wp_login_url(); ?>" />
 				<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
 		<?php
 		wp_admin_css( 'login', true );
@@ -268,7 +285,7 @@ class ds_more_privacy_options {
 			$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
 						<p>Wait 8 seconds or 
-							<a href="<?php echo home_url(); ?>/wp-login.php">click</a> to continue.</p>
+							<a href="<?php echo wp_login_url(); ?>">click</a> to continue.</p>
 							<?php $this->registered_members_login_message (); ?>
 					</form>
 				</div>
@@ -279,7 +296,7 @@ class ds_more_privacy_options {
 		} elseif (!current_user_can('read')) {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
         	header("Status: 302 Moved Temporarily");
 			exit();
 		}
@@ -312,7 +329,7 @@ class ds_more_privacy_options {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
 							<p>Wait 8 seconds or 
-								<a href="<?php echo home_url(); ?>/wp-login.php">click</a> to continue.</p>
+								<a href="<?php echo wp_login_url(); ?>">click</a> to continue.</p>
 								<?php $this->registered_admins_login_message (); ?>
 						</form>
 					</div>
@@ -323,7 +340,7 @@ class ds_more_privacy_options {
 		} elseif (!current_user_can('manage_options')) {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['REQUEST_URI']));
+			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
         	header("Status: 302 Moved Temporarily");
 			exit();
 		}

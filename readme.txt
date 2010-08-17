@@ -35,6 +35,8 @@ Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
 
 Login message has link to sign-up page of a "Network Users Only" blog or a link the blog admin email if user is logged in but not a member of a "Members Only" blog.
 
+Supports filters to the login_url and wp_signup_location. 
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
@@ -48,6 +50,7 @@ This section describes how to install the plugin and get it working.
 
 * Will this plugin also protect feeds? Yes.
 * Will this plugin protect uploaded files and images? No.
+* Will this plugin redirect to a custom signup page or login page? Yes I've added support for filters to the login_url and wp_signup_location. I've included a couple of sample functions of these hooks in the plugin's comment section in the plugin code.
 
 == Screenshots ==
 
@@ -56,6 +59,11 @@ This section describes how to install the plugin and get it working.
 3. Sites Edit: Misc Site Options
 
 == Changelog ==
+
+= 3.0.1.2 = 
+
+Supports filters to the login_url and wp_signup_location. 
+
 = 3.0.1.1 =
 SuperAdmin receives an email when blog privacy changes.
 
@@ -78,6 +86,10 @@ deprecated $user_level check replaced with is_user_logged_in()
 * WPMU version no longer supported.
 
 == Upgrade Notice ==
+= 3.0.1.2 =
+
+Supports filters to the login_url and wp_signup_location. 
+
 = 3.0.1 = 
 
 deprecated $user_level check replaced with is_user_logged_in()
