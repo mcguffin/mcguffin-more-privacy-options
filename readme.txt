@@ -60,7 +60,6 @@ This section describes how to install the plugin and get it working.
 
 == Changelog ==
 = 3.0.1.3 =
-
 * fixed bug causing 404 from login_url: wp_login_url(urlencode($_SERVER['REQUEST_URI'])) to wp_login_url()
 modified authentication checks for feeds
 
@@ -71,13 +70,9 @@ Added/Fixed:
 = 3.0.1.1 =
 Added:
 * SuperAdmin receives an email when blog privacy changes.
-
 * Privacy status reflected in Dashboard/Admin header.
-
 * Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
-
 * Login message has link to signup page if visitor is not logged or a link the blog admin email if user is logged in but not a member of a members only blog.
-
 * noindex,nofollow correctly added to meta in wp_head and login_head
  
 = 3.0.1 = 
@@ -92,15 +87,12 @@ Fixed:
 
 == Upgrade Notice ==
 = 3.0.1.3 =
-
 * fixed bug causing 404 from login_url
 
 = 3.0.1.2 =
-
 * Supports filters to the login_url and wp_signup_location. 
 
 = 3.0.1 = 
-
 * deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
