@@ -59,16 +59,15 @@ This section describes how to install the plugin and get it working.
 3. Sites Edit: Misc Site Options
 
 == Changelog ==
+
 = 3.0.1.3 =
 * fixed bug causing 404 from login_url: wp_login_url(urlencode($_SERVER['REQUEST_URI'])) to wp_login_url()
 modified authentication checks for feeds
 
 = 3.0.1.2 = 
-Added/Fixed:
 * Supports filters to the login_url and wp_signup_location. 
 
 = 3.0.1.1 =
-Added:
 * SuperAdmin receives an email when blog privacy changes.
 * Privacy status reflected in Dashboard/Admin header.
 * Uses WP3 functions network_home_url() and home_url() for SSL login redirects.
@@ -76,7 +75,6 @@ Added:
 * noindex,nofollow correctly added to meta in wp_head and login_head
  
 = 3.0.1 = 
-Fixed:
 * deprecated $user_level check replaced with is_user_logged_in()
 
 = 3.0 =
