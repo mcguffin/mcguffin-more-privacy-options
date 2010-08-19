@@ -61,7 +61,7 @@ This section describes how to install the plugin and get it working.
 == Changelog ==
 = 3.0.1.3 =
 
-fixed bug causing 404 from login_url: wp_login_url(urlencode($_SERVER['REQUEST_URI'])) to wp_login_url()
+* fixed bug causing 404 from login_url: wp_login_url(urlencode($_SERVER['REQUEST_URI'])) to wp_login_url()
 modified authentication checks for feeds
 
 = 3.0.1.2 = 
@@ -91,6 +91,10 @@ Fixed:
 * WPMU version no longer supported.
 
 == Upgrade Notice ==
+= 3.0.1.3 =
+
+* fixed bug causing 404 from login_url
+
 = 3.0.1.2 =
 
 * Supports filters to the login_url and wp_signup_location. 
