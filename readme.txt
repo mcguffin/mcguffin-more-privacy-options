@@ -59,6 +59,10 @@ This section describes how to install the plugin and get it working.
 3. Sites Edit: Misc Site Options
 
 == Changelog ==
+= 3.0.1.3 =
+
+fixed bug causing 404 from login_url: wp_login_url(urlencode($_SERVER['REQUEST_URI'])) to wp_login_url()
+modified authentication checks for feeds
 
 = 3.0.1.2 = 
 Added/Fixed:

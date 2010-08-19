@@ -3,7 +3,7 @@
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
-Version: 3.0.1.2
+Version: 3.0.1.3
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
@@ -50,6 +50,7 @@ function ds_my_login_page() {
 	return $page;
 }
 add_filter( 'login_url', 'ds_my_login_page' );
+//add_filter( 'logout_url', 'ds_my_login_page' ); // same or similar function for logout
 
 function ds_my_signup_page() {
 	$page = 'http://mysite.tld/signup/';
@@ -198,25 +199,41 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	//---Functions for Registered Community Users Only Blog-------------------//
 	//------------------------------------------------------------------------//
-	function ds_users_authenticator () {
-			if ( !is_user_logged_in() ) {
-	      		if( is_feed()) {
+	function ds_feed_login() {
+    	 global $current_blog, $blog_id;
     	       	$credentials = array();
         	   	$credentials['user_login'] = $_SERVER['PHP_AUTH_USER'];
         	   	$credentials['user_password'] = $_SERVER['PHP_AUTH_PW'];
 
-       		    $user = wp_signon( $credentials );
+       		    $user = wp_signon( $credentials ); //if this creates WP_User, the next 3 lines are redundant
+       		    
+				$user_id = get_user_id_from_string( $user->user_login );
 
-	   	       if ( is_wp_error( $user ) )
+
+	   	       if ( is_wp_error( $user ) ||
+	   	       // "Members Only"
+	   	        ( ( '-2' == $current_blog->public ) && ( !is_user_member_of_blog( $user_id, $blog_id ) ) && !is_super_admin( $user_id ) ) ||
+	   	       // TODO "Admins Only" - members still see feeds need a new ms-function is_site_admin( $user_id, $blog_id )
+   	        ( ( '-3' == $current_blog->public )
+   	        //&&  !is_site_admin( $user_id, $blog_id ) //this function doesn't exist
+  			&& ( !is_user_member_of_blog( $user_id, $blog_id ) )
+   	        && !is_super_admin( $user_id ) )
+	   	        )
     	       {
                 header( 'WWW-Authenticate: Basic realm="' . $_SERVER['SERVER_NAME'] . '"' );
                 header( 'HTTP/1.0 401 Unauthorized' );
                 die();
-    	       }
+    	       }   	       
+	       }
+	
+	function ds_users_authenticator () {
+			if ( !is_user_logged_in() ) {
+	      		if( is_feed() ) {
+    	       	$this->ds_feed_login();
 	       } else {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
+			header('Location: ' . wp_login_url());
         	header("Status: 302 Moved Temporarily");
 			exit();
 			}
@@ -280,9 +297,13 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	//---Functions for Members Only Blog---------------------------------------//
 	//------------------------------------------------------------------------//
-	function ds_members_authenticator () {
-		if (( is_user_logged_in() ) && (!current_user_can('read'))) {
-			$this->ds_login_header(); ?>
+	function ds_members_authenticator() {
+		global $current_user, $blog_id;
+		if( is_user_member_of_blog( $current_user->id, $blog_id ) || is_super_admin() ) {
+			 return;
+		} else {
+				if ( is_user_logged_in() ) {	      	
+					$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
 						<p>Wait 8 seconds or 
 							<a href="<?php echo wp_login_url(); ?>">click</a> to continue.</p>
@@ -293,12 +314,18 @@ class ds_more_privacy_options {
 		</html>
 		<?php 
 			exit();
-		} elseif (!current_user_can('read')) {
+		} else {
+					if( is_feed()) {
+    	       	$this->ds_feed_login();
+    	       	
+		   	    } else {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
+			header('Location: ' . wp_login_url());
         	header("Status: 302 Moved Temporarily");
 			exit();
+				}
+			}
 		}
 	}
 	function registered_members_login_message () {
@@ -325,7 +352,11 @@ class ds_more_privacy_options {
 	//---Functions for Admins Only Blog--------------------------------------//
 	//---WARNING: member users, if they exist, still see the backend---------//
 	function ds_admins_authenticator () {
-		if (( is_user_logged_in() ) && (!current_user_can('manage_options'))) {
+		if( current_user_can( 'manage_options' ) || is_super_admin() ) {
+			 return;
+		} else {
+		
+		if (( is_user_logged_in() )) {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
 							<p>Wait 8 seconds or 
@@ -337,12 +368,17 @@ class ds_more_privacy_options {
 			</html>
 			<?php 
 			exit();
-		} elseif (!current_user_can('manage_options')) {
+		} else {
+					if( is_feed()) {
+    	       	$this->ds_feed_login();
+		   	    } else {
 			nocache_headers();
 			header("HTTP/1.1 302 Moved Temporarily");
-			header('Location: ' . wp_login_url(urlencode($_SERVER['REQUEST_URI'])));
+			header('Location: ' . wp_login_url());
         	header("Status: 302 Moved Temporarily");
 			exit();
+				}
+			}
 		}
 	}
 	function registered_admins_login_message () {
