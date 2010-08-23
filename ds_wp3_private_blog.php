@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: More Privacy Options
-Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
+Plugin URI:	http://dsader.snowotherway.org/wordpress-plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
 Version: 3.0.1.3
 Author: D. Sader
