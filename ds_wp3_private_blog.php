@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: More Privacy Options
-Plugin URI:	http://dsader.snowotherway.org/wordpress-plugins/more-privacy-options/
-Description: WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Sitewide "Users Only" switch at SuperAdmin-->Options page. Just drop in mu-plugins.
-Version: 3.0.1.3
+Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
+Description: WP3.0 multisite "mu-plugin" to add more privacy options. Sitewide "Users Only" switch at Network Admin-->Settings page. Install in mu-plugins.
+Version: 3.2.1.1
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
@@ -59,10 +59,17 @@ function ds_my_signup_page() {
 add_filter( 'wp_signup_location', 'ds_my_signup_page' );
 
 */
+function ds_my_login_page_redirect() {
+	$redirect = urlencode( $_SERVER['REQUEST_URI'] );
+	$page = get_option( 'siteurl' ) . '/wp-login.php?redirect_to=' . $redirect;
+	return $page;
+}
+add_filter( 'login_url', 'ds_my_login_page_redirect' );
+
 
 class ds_more_privacy_options {
 
-	function ds_more_privacy_options() {
+	function ds_more_privacy_options() {	
 	}
 	function ds_mail_super_admin() {
 		global $wpdb, $blogname, $current_blog;
@@ -75,8 +82,8 @@ class ds_more_privacy_options {
 			$to_new = $this->ds_mail_super_admin_messages($blog_public_new);			
 
 			$email =  stripslashes( get_site_option('admin_email') );
-			$subject = 'Blog '.$blogname.'('.$blog_id.') changed privacy setting from '.$from_old.' to '.$to_new;
-			$message = 'Blog '.$blogname.'('.$blog_id.') changed privacy setting from '.$from_old.' to '.$to_new;
+			$subject = 'Blog '.$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', changed privacy setting from '.$from_old.' to '.$to_new;
+			$message = 'Blog '.$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', changed privacy setting from '.$from_old.' to '.$to_new;
      	mail($email, $subject , $message);
 	}
 	function ds_mail_super_admin_messages($blog_public) {
@@ -213,9 +220,9 @@ class ds_more_privacy_options {
 	   	       if ( is_wp_error( $user ) ||
 	   	       // "Members Only"
 	   	        ( ( '-2' == $current_blog->public ) && ( !is_user_member_of_blog( $user_id, $blog_id ) ) && !is_super_admin( $user_id ) ) ||
-	   	       // TODO "Admins Only" - members still see feeds need a new ms-function is_site_admin( $user_id, $blog_id )
+	   	       // TODO "Admins Only" - members still see feeds need a new ms-function is_super_admin( $user_id, $blog_id )
    	        ( ( '-3' == $current_blog->public )
-   	        //&&  !is_site_admin( $user_id, $blog_id ) //this function doesn't exist
+   	        //&&  !is_super_admin( $user_id, $blog_id ) //this function doesn't exist
   			&& ( !is_user_member_of_blog( $user_id, $blog_id ) )
    	        && !is_super_admin( $user_id ) )
 	   	        )
@@ -242,7 +249,7 @@ class ds_more_privacy_options {
 	function registered_users_login_message () {
 		global $current_site;
 		echo '<p>';
-		echo '' . bloginfo(name) . ' can be viewed by <a href="' . apply_filters( 'wp_signup_location', network_home_url( 'wp-signup.php' ) ) . '">Registered Network Users of ' . $current_site->site_name .'</a>.';
+		echo '' . get_bloginfo('name') . ' can be viewed by <a href="' . apply_filters( 'wp_signup_location', network_home_url( 'wp-signup.php' ) ) . '">Registered Network Users of ' . $current_site->site_name .'</a>.';
 		echo '</p><br/>';
 	}
 	function registered_users_header_title () {
@@ -266,7 +273,7 @@ class ds_more_privacy_options {
 	<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 		<head>
 			<title><?php _e("Private Blog Message"); ?></title>
-				<meta http-equiv="refresh" content="8;URL=<?php echo wp_login_url(); ?>" />
+				<!--<meta http-equiv="refresh" content="8;URL=<?php echo wp_login_url(); ?>" /> -->
 				<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
 		<?php
 		wp_admin_css( 'login', true );
@@ -305,8 +312,7 @@ class ds_more_privacy_options {
 				if ( is_user_logged_in() ) {	      	
 					$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
-						<p>Wait 8 seconds or 
-							<a href="<?php echo wp_login_url(); ?>">click</a> to continue.</p>
+						<p><a href="<?php if (!is_user_logged_in()) { echo wp_login_url(); } else { echo network_home_url(); } ?>">Click</a> to continue.</p>
 							<?php $this->registered_members_login_message (); ?>
 					</form>
 				</div>
@@ -383,7 +389,7 @@ class ds_more_privacy_options {
 	}
 	function registered_admins_login_message () {
 		echo '<p>';
-		echo '' . bloginfo(name) . __(' can be viewed by administrators only.');
+		echo '' . get_bloginfo('name') . __(' can be viewed by administrators only.');
 		echo '</p><br/>';
 	}	
 	function registered_admins_header_title () {
@@ -405,19 +411,19 @@ class ds_more_privacy_options {
 		echo '
 		<table class="form-table">
 		<tr valign="top"> 
-			<th scope="row">' . __('Blog Privacy') . '</th>';
+			<th scope="row">' . __('Blog Privacy') . '</th><td>';
+
 			$checked = ( $number == "-1" ) ? " checked=''" : "";
-		echo '<td><input type="radio" name="ds_sitewide_privacy" id="ds_sitewide_privacy" value="-1" ' . $checked . '/>
-			<br />
-			<small>
+		echo '<label><input type="radio" name="ds_sitewide_privacy" id="ds_sitewide_privacy" value="-1" ' . $checked . '/>
 			' . __('Blog network can be viewed by registered users of this community only.') . '
-			</small></td>';
+			</label><br />';
+
 			$checked = ( $number == "1" ) ? " checked=''" : "";
-		echo '<td><input type="radio" name="ds_sitewide_privacy" id="ds_sitewide_privacy_1" value="1" ' . $checked . '/>
-			<br />
-			<small>
+		echo '<label><input type="radio" name="ds_sitewide_privacy" id="ds_sitewide_privacy_1" value="1" ' . $checked . '/>
 			' . __('Default: privacy managed per blog.') . '
-			</small></td>
+			</label><br />';
+
+		echo '</td>			
 		</tr>
 		</table>'; 
 	}
