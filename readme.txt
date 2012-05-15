@@ -2,8 +2,8 @@
 Contributors: dsader
 Donate link: http://dsader.snowotherway.org
 Tags: privacy, private blog, multisite, members only
-Requires at least: 3.2.1
-Tested up to: 3.2.1
+Requires at least: 3.3.2
+Tested up to: 3.3.2
 Stable tag: Trunk
 
 WP3.0 multisite "mu-plugin" to add more privacy options to the options-privacy and ms-blogs pages. Just drop in mu-plugins.
@@ -60,6 +60,9 @@ This section describes how to install the plugin and get it working.
 
 == Changelog ==
 
+= 3.2.1.5 =
+* Tested up to: WP 3.3.2
+
 = 3.2.1.1 =
 * Tested up to: WP 3.2.1
 
@@ -88,6 +91,9 @@ modified authentication checks for feeds
 * WPMU version no longer supported.
 
 == Upgrade Notice ==
+= 3.2.1.5 =
+* Tested up to: WP 3.3.2
+
 = 3.0.1.3 =
 * fixed bug causing 404 from login_url
 

@@ -3,7 +3,7 @@
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
 Description: WP3.0 multisite "mu-plugin" to add more privacy options. Sitewide "Users Only" switch at Network Admin-->Settings page. Install in mu-plugins.
-Version: 3.2.1.1
+Version: 3.2.1.5
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 
@@ -62,6 +62,8 @@ add_filter( 'wp_signup_location', 'ds_my_signup_page' );
 function ds_my_login_page_redirect() {
 	$redirect = urlencode( $_SERVER['REQUEST_URI'] );
 	$page = get_option( 'siteurl' ) . '/wp-login.php?redirect_to=' . $redirect;
+//	$page = wp_login_url($redirect);
+//	$page = wp_login_url( get_permalink() );
 	return $page;
 }
 add_filter( 'login_url', 'ds_my_login_page_redirect' );
@@ -84,7 +86,7 @@ class ds_more_privacy_options {
 			$email =  stripslashes( get_site_option('admin_email') );
 			$subject = 'Blog '.$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', changed privacy setting from '.$from_old.' to '.$to_new;
 			$message = 'Blog '.$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', changed privacy setting from '.$from_old.' to '.$to_new;
-     	mail($email, $subject , $message);
+ 		wp_mail($email, $subject , $message);
 	}
 	function ds_mail_super_admin_messages($blog_public) {
 			if ( '1' == $blog_public ) {
@@ -365,9 +367,8 @@ class ds_more_privacy_options {
 		if (( is_user_logged_in() )) {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
-							<p>Wait 8 seconds or 
-								<a href="<?php echo wp_login_url(); ?>">click</a> to continue.</p>
-								<?php $this->registered_admins_login_message (); ?>
+							<?php $this->registered_admins_login_message (); ?>
+							<p>Visit <a href="<?php echo network_home_url(); ?>"><?php echo network_home_url(); ?></a> to continue.</p>
 						</form>
 					</div>
 				</body>
@@ -458,20 +459,23 @@ add_action('blog_privacy_selector', array(&$ds_more_privacy_options, 'add_privac
 		$number = intval(get_site_option('ds_sitewide_privacy'));
 
 if (( '-1' == $current_blog->public ) || ($number == '-1')) { // add exclusion of main blog if desired
-	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_users_authenticator'));
+//	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_users_authenticator'));
+	add_action('send_headers', array(&$ds_more_privacy_options, 'ds_users_authenticator'));
 	add_action('login_form', array(&$ds_more_privacy_options, 'registered_users_login_message')); 
 	add_filter('privacy_on_link_title', array(&$ds_more_privacy_options, 'registered_users_header_title'));
 	add_filter('privacy_on_link_text', array(&$ds_more_privacy_options, 'registered_users_header_link') );
 	}
 if ( '-2' == $current_blog->public ) {
-	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_members_authenticator'));
+//	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_members_authenticator'));
+	add_action('send_headers', array(&$ds_more_privacy_options, 'ds_members_authenticator'));
 	add_action('login_form', array(&$ds_more_privacy_options, 'registered_members_login_message')); 
 	add_filter('privacy_on_link_title', array(&$ds_more_privacy_options, 'registered_members_header_title'));
 	add_filter('privacy_on_link_text', array(&$ds_more_privacy_options, 'registered_members_header_link') );
 
 }
 if ( '-3' == $current_blog->public ) {
-	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_admins_authenticator'));
+//	add_action('template_redirect', array(&$ds_more_privacy_options, 'ds_admins_authenticator'));
+	add_action('send_headers', array(&$ds_more_privacy_options, 'ds_admins_authenticator'));
 	add_action('login_form', array(&$ds_more_privacy_options, 'registered_admins_login_message'));
 	add_filter('privacy_on_link_title', array(&$ds_more_privacy_options, 'registered_admins_header_title'));
 	add_filter('privacy_on_link_text', array(&$ds_more_privacy_options, 'registered_admins_header_link') );
