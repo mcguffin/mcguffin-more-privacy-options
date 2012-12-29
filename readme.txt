@@ -35,6 +35,7 @@ Uses WP3+ functions auth_redirect(), network_home_url(), and home_url() for SSL 
 
 Login message has link to sign-up page of a "Network Users Only" blog or a link the blog admin email if user is logged in but not a member of a "Members Only" blog.
 
+WP svn via Aptana 3
 
 == Installation ==
 
