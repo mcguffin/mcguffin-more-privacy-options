@@ -13,11 +13,11 @@ Add more privacy(visibility) options to a WordPress 3.8.1 Multisite Network. Set
 == Description ==
 Adds three more levels of privacy(visibility) to the Settings-->Reading page.
 
-1. Blog visible to any logged in community member - "Network Users Only".
+1. Site visible to any logged in community member - "Network Users Only".
 
-2. Blog visible only to registered users of blog - "Blog Members Only".
+2. Site visible only to registered users of blog - "Site Members Only".
 
-3. Blog visible only to administrators - "Admins Only".
+3. Site visible only to administrators - "Site Admins Only".
 
 Mulitsite Network Admin can set an override on site privacy at "Network Visibility Selector" on Network Settings page
 
