@@ -2,7 +2,7 @@
 /*
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
-Version: 3.8.1
+Version: 3.8.1.1
 Description: Add more privacy(visibility) options to a WordPress 3.5 Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default.
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
@@ -60,6 +60,7 @@ class ds_more_privacy_options {
 		//------------------------------------------------------------------------//
 		//---Hooks-----------------------------------------------------------------//
 		//------------------------------------------------------------------------//
+				add_action( 'admin_init', array(&$this, 'ds_localization_init' ));
 			// Network->Settings
 				add_action( 'update_wpmu_options', array(&$this, 'sitewide_privacy_update'));
 				add_action( 'wpmu_options', array(&$this, 'sitewide_privacy_options_page'));

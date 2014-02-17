@@ -63,9 +63,9 @@ This section describes how to install the plugin and get it working.
 
 == Changelog ==
 
-= 3.8.1 =
+= 3.8.1.1 =
 * Tested up to: WP 3.8.1, localization ready
 
 == Upgrade Notice ==
-= 3.8.1 =
-* Tested up to: WP 3.8.1, localization
+= 3.8.1.1 =
+* Tested up to: WP 3.8.1, localization ready
