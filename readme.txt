@@ -45,10 +45,11 @@ Localization ready.
 
 This section describes how to install the plugin and get it working.
 
-1. Upload `ds_wp3_private_blog.php` to the `/wp-content/mu-plugins/` directory
-2. Set multisite "Network Visibility" option at Network-Settings page
-3. Set individual blog visibility options at Settings-Privacy page, or...
-4. Set individual blog visibility options at Network Admin-Sites-Edit page
+1. Upload entire `more-privacy-options` folder to the `/wp-content/plugins/` directory
+2. Network Activate the plugin through the 'Network Plugins' menu in WordPress
+3. Set multisite "Network Visibility" option at Network-Settings page
+4. Set individual site visibility options at Settings-Privacy page, or...
+5. Set individual site visibility options at Network Admin-Sites-Edit page
 
 == Frequently Asked Questions ==
 
