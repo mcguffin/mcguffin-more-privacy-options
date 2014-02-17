@@ -281,6 +281,7 @@ class ds_more_privacy_options {
 			<br/>
 			<label class="checkbox" for="blog-private-3">
 				<input id="blog-private-3" type="radio" name="blog_public" value="-3" <?php checked('-3', get_option('blog_public')); ?> /><?php _e('Visible only to administrators of this site', $this->l10n_prefix); ?>
+			</label>
 			<?php 
 	}
 
