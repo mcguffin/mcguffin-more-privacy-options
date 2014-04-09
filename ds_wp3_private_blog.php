@@ -2,8 +2,8 @@
 /*
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
-Version: 3.8.1.3
-Description: Add more privacy(visibility) options to a WordPress 3.5 Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default.
+Version: 3.8.2
+Description: Add more privacy(visibility) options to a WordPress Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default.
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
 Network: true
@@ -60,7 +60,7 @@ class ds_more_privacy_options {
 		//------------------------------------------------------------------------//
 		//---Hooks-----------------------------------------------------------------//
 		//------------------------------------------------------------------------//
-				add_action( 'admin_init', array(&$this, 'ds_localization_init' ));
+				add_action( 'init', array(&$this, 'ds_localization_init' ));
 			// Network->Settings
 				add_action( 'update_wpmu_options', array(&$this, 'sitewide_privacy_update'));
 				add_action( 'wpmu_options', array(&$this, 'sitewide_privacy_options_page'));
@@ -117,7 +117,7 @@ class ds_more_privacy_options {
 	}
 	
 	function ds_localization_init() {
-				load_plugin_textdomain( 'more-privacy-options', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/');
+				load_plugin_textdomain( $this->l10n_prefix, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/');
 	}
 	
 	function ds_mail_super_admin() {

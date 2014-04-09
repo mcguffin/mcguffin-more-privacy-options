@@ -3,7 +3,7 @@ Contributors: dsader
 Donate link: http://dsader.snowotherway.org
 Tags: visibility, privacy, private blog, multisite, members only, network visibility, site visibility
 Requires at least: 3.7.1
-Tested up to: 3.8.1
+Tested up to: 3.8.2
 Stable tag: Trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -64,9 +64,9 @@ This section describes how to install the plugin and get it working.
 
 == Changelog ==
 
-= 3.8.1.1 =
-* Tested up to: WP 3.8.1, localization ready
+= 3.8.2 =
+* Tested up to: WP 3.8.2, localization ready
 
 == Upgrade Notice ==
-= 3.8.1.1 =
-* Tested up to: WP 3.8.1, localization ready
+= 3.8.2 =
+* Tested up to: WP 3.8.2, localization ready
