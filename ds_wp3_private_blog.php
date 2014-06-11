@@ -2,7 +2,7 @@
 /*
 Plugin Name: More Privacy Options
 Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
-Version: 3.8.2
+Version: 3.9.1.1
 Description: Add more privacy(visibility) options to a WordPress Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default.
 Author: D. Sader
 Author URI: http://dsader.snowotherway.org/
@@ -44,8 +44,51 @@ http://wordpress.org/extend/plugins/wp-ban/
 To protect files/attachments/images uploaded to protected blogs(.htaccess rewrites needed)
 Pluginspiration: http://plugins.svn.wordpress.org/private-files/trunk/privatefiles.php
 
-//To allow wp-activate.php if blog is not visible
+?????????? Notes/Questions about allowing wp-activate.php on a private site ????????????????????
+
+First, but using string matching is dumb and easily bypasses login page. Adding "?wp-activate.php" to any url
+
 //if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')) return;
+
+Second, allow activate.php on the main page, but PHP_SELF url string matching may have the same drawbacks as REQUEST_URI. Could be done to main page with a plugin/function.
+
+Also, the appearance of wp-activate on a subsite depends on which action is hooked: send_headers, or template_redirect. I prefer the template_redirect so activations can occur on subsites, too.
+
+add_action('send_headers','ds_more_privacy_options_activate',10);
+	function ds_more_privacy_options_activate() {
+		global $ds_more_privacy_options;
+
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) {
+			remove_action('send_headers', array($ds_more_privacy_options, 'ds_users_authenticator'),10);
+			remove_action('send_headers', array($ds_more_privacy_options, 'ds_members_authenticator'),10);
+			remove_action('send_headers', array($ds_more_privacy_options, 'ds_admins_authenticator'),10);
+		}
+	}
+
+Third, you could redirect any url match to the main page wp-activate.php, but the redirection doesn't take the activation key with it - just not ideal to use any site but the main for activation IMHO.
+
+// at any rate using url matching was dumb - adding wp-activate.php to any url bypassed the login auth - so a redirect to main site may help - provided the main site isn't also private.
+//		if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')  && !is_main_site()) { //DO NOT DO THIS!
+	
+So, better may be PHP_SELF since we can wait for script to execute before deciding to auth_redirect it.
+	
+//		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php')  && !is_main_site()) {
+//			$destination = network_home_url('wp-activate.php');
+//			wp_redirect( $destination );
+//		exit();
+//		}
+
+Finally, changing the hook to fire at send_headers rather than template_redirect allows the activation page on every site. Still shows template pages with headers/sidebars etc - so not ideal either. Hence my preference to redirect to the main site.
+
+//			//	add_action('template_redirect', array(&$this, 'ds_users_authenticator'));
+				add_action('send_headers', array(&$this, 'ds_users_authenticator'));
+
+So, I have the private functions the way I actually use them on my private sites/networks. I also do many activations as the SiteAdmin manually using other plugins.
+Therefore, the code in this revision may make blogs more private, but somewhat more inconvenient to activate, both features I desire.
+
+We'll see how the feedback trickles in on this issue. 
+
+Oh, and is it even necessary to show a robots.txt to spiders if the blog is private anyway?
 
 */
 
@@ -77,7 +120,9 @@ class ds_more_privacy_options {
 			// all three add_privacy_option get a redirect and a message in the Login form
 		$number = intval(get_site_option('ds_sitewide_privacy'));
 
-		if (( '-1' == $current_blog->public ) || ($number == '-1')) { 
+		if (( '-1' == $current_blog->public ) || ($number == '-1')) {
+			
+			//wp_is_mobile() ? is send_headers or template_redirect better for mobiles?
 				add_action('template_redirect', array(&$this, 'ds_users_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_users_authenticator'));
 				add_action('login_form', array(&$this, 'registered_users_login_message')); 
@@ -155,7 +200,7 @@ class ds_more_privacy_options {
 			}
 	}	
 
-	function do_robots() {
+	function do_robots2() {
 		remove_action('do_robots', 'do_robots');
 
 		header( 'Content-Type: text/plain; charset=utf-8' );
@@ -176,6 +221,38 @@ class ds_more_privacy_options {
 	echo apply_filters('robots_txt', $output, $public);
 	}
 	
+	
+	function do_robots() {
+		remove_action( 'do_robots', 'do_robots' );
+
+		header( 'Content-Type: text/plain; charset=utf-8' );
+
+		do_action( 'do_robotstxt' );
+
+		$output = "User-agent: *\n";
+		$public = get_option( 'blog_public' );
+		if ( '1' != $public ) {
+			$output .= "Disallow: /\n";
+		} else {
+			if ( WP_CONTENT_DIR ) {
+     			$dirs = pathinfo( WP_CONTENT_DIR );
+     			$dir = $dirs['basename'];
+			} else {
+     			$dir = 'wp-content';
+			}
+			$output .= "Disallow:\n";
+			$output .= "Disallow: /wp-admin\n";
+			$output .= "Disallow: /wp-includes\n";
+			$output .= "Disallow: /wp-login.php\n";
+			$output .= "Disallow: /$dir/plugins\n";
+			$output .= "Disallow: /$dir/cache\n";
+			$output .= "Disallow: /$dir/themes\n";
+			$output .= "Disallow: /trackback\n";
+			$output .= "Disallow: /comments\n";
+		}
+
+	      echo apply_filters('robots_txt', $output, $public);
+	}	
 
 	function noindex() {
 		remove_action( 'login_head', 'noindex' );
@@ -316,8 +393,13 @@ class ds_more_privacy_options {
 	}
 	
 	function ds_users_authenticator () {
-		if( strpos($_SERVER['REQUEST_URI'], 'robots.txt')) return;
-		if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')) return;
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
+			$destination = network_home_url('wp-activate.php');
+			wp_redirect( $destination );
+		exit();
+		}
+
 
 		if ( !is_user_logged_in() ) {
 			if( is_feed() ) {
@@ -388,8 +470,12 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	function ds_members_authenticator() {
 		global $current_user, $blog_id;
-		if( strpos($_SERVER['REQUEST_URI'], 'robots.txt')) return;
-		if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')) return;
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
+			$destination = network_home_url('wp-activate.php');
+			wp_redirect( $destination );
+		exit();
+		}
 
 		if( is_user_member_of_blog( $current_user->ID, $blog_id ) || is_super_admin() ) {
 			 return;
@@ -441,8 +527,12 @@ class ds_more_privacy_options {
 	//---Functions for Admins Only Blog--------------------------------------//
 	//---WARNING: member users, if they exist, still see the backend---------//
 	function ds_admins_authenticator() {
-		if( strpos($_SERVER['REQUEST_URI'], 'robots.txt')) return;
-		if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')) return;
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
+			$destination = network_home_url('wp-activate.php');
+			wp_redirect( $destination );
+		exit();
+		}
 
 		if( current_user_can( 'manage_options' ) || is_super_admin() ) {
 			 return;
