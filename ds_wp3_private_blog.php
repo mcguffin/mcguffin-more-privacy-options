@@ -108,6 +108,13 @@ class ds_more_privacy_options {
 				add_action( 'update_wpmu_options', array(&$this, 'sitewide_privacy_update'));
 				add_action( 'wpmu_options', array(&$this, 'sitewide_privacy_options_page'));
 
+			// Network->Settings (default visibility)
+				add_action( 'update_wpmu_options', array(&$this, 'default_visibility_update'));
+				add_action( 'wpmu_options', array(&$this, 'default_visibility_options_page'));
+			
+			// apply default visibility to new blogs
+				add_action( 'wpmu_new_blog', array( &$this , 'set_new_blog_visibility' ) , 10 , 6 );
+
 			// hooks into Misc Blog Actions in Network->Sites->Edit
 				add_action('wpmueditblogaction', array(&$this, 'wpmu_blogs_add_privacy_options'),-999);
 			// hooks into Blog Columns views Network->Sites
@@ -125,14 +132,14 @@ class ds_more_privacy_options {
 			//wp_is_mobile() ? is send_headers or template_redirect better for mobiles?
 				add_action('template_redirect', array(&$this, 'ds_users_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_users_authenticator'));
-				add_action('login_form', array(&$this, 'registered_users_login_message')); 
+			//	add_action('login_form', array(&$this, 'registered_users_login_message')); 
 				add_filter('privacy_on_link_title', array(&$this, 'registered_users_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_users_header_link') );
 		}
 		if ( '-2' == $current_blog->public ) {
 				add_action('template_redirect', array(&$this, 'ds_members_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_members_authenticator'));
-				add_action('login_form', array(&$this, 'registered_members_login_message')); 
+			//	add_action('login_form', array(&$this, 'registered_members_login_message')); 
 				add_filter('privacy_on_link_title', array(&$this, 'registered_members_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_members_header_link') );
 
@@ -140,7 +147,7 @@ class ds_more_privacy_options {
 		if ( '-3' == $current_blog->public ) {
 				add_action('template_redirect', array(&$this, 'ds_admins_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_admins_authenticator'));
-				add_action('login_form', array(&$this, 'registered_admins_login_message'));
+			//	add_action('login_form', array(&$this, 'registered_admins_login_message'));
 				add_filter('privacy_on_link_title', array(&$this, 'registered_admins_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_admins_header_link') );
 		}
@@ -405,6 +412,7 @@ class ds_more_privacy_options {
 			if( is_feed() ) {
 				$this->ds_feed_login();
 			} else {
+				do_action( 'ds_before_auth_redirect' );
 				auth_redirect();
 			}
 		}
@@ -496,6 +504,7 @@ class ds_more_privacy_options {
     	       	$this->ds_feed_login();
     	       	
 		   	    } else {
+		do_action( 'ds_before_auth_redirect' );
 		auth_redirect();
 				}
 			}
@@ -553,6 +562,7 @@ class ds_more_privacy_options {
 					if( is_feed()) {
     	       	$this->ds_feed_login();
 		   	    } else {
+		do_action( 'ds_before_auth_redirect' );
 		auth_redirect();
 				}
 			}
@@ -605,6 +615,45 @@ class ds_more_privacy_options {
 	function sitewide_privacy_update() {
 		update_site_option('ds_sitewide_privacy', intval($_POST['ds_sitewide_privacy']));
 	}
+	
+	
+	function default_visibility_options_page() {
+		$default_visibility = intval( get_site_option('ds_default_visibility' , 1 ) );
+		
+		$visiblity_options = array(
+			'1'  => __('Visible', $this->l10n_prefix),
+			'0'  => __('No Search', $this->l10n_prefix),
+			'-1' => __('Network Users Only', $this->l10n_prefix),
+			'-2' => __('Site Members Only', $this->l10n_prefix),
+			'-3' => __('Site Admins Only', $this->l10n_prefix),
+		);
+		
+		?><table class="form-table">
+			<tr valign="top"> 
+				<th scope="row"><?php _e( 'Default visibility', $this->l10n_prefix); ?></th>
+				<td><?php
+					foreach ( $visiblity_options as $value => $label ) {
+					?>
+						<label for='ds_default_visibility<?php echo $value ?>'>
+						<input type='radio' name='ds_default_visibility' id='ds_default_visibility<?php echo $value ?>' value='<?php echo $value ?>' <?php checked( $value, $default_visibility , true ) ?>>
+						<?php echo $label; ?></label><br />
+					<?php
+					}
+				?></td>
+			</tr>
+		</table>
+		<?php
+	}
+	function default_visibility_update() {
+		update_site_option('ds_default_visibility', intval($_POST['ds_default_visibility']));
+	}
+	function set_new_blog_visibility( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+		$public = get_site_option('ds_default_visibility' , 1 );
+		switch_to_blog( $blog_id );
+		update_option( 'blog_public' , $public );
+		restore_current_blog();
+	}
+
 }
 
 if (class_exists("ds_more_privacy_options")) {
