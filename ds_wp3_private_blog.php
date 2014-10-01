@@ -162,7 +162,7 @@ class ds_more_privacy_options {
 			//no pings unless public either
 				add_filter('option_ping_sites', array(&$this, 'privacy_ping_filter'),1);
 			//email SuperAdmin when privacy changes
-				add_action( 'update_blog_public', array(&$this,'ds_mail_super_admin'));
+				// add_action( 'update_blog_public', array(&$this,'ds_mail_super_admin'));
 			// hook into signup form?
 				 add_action('signup_blogform', array(&$this, 'add_privacy_options'));
 
@@ -183,6 +183,7 @@ class ds_more_privacy_options {
 			$to_new = $this->ds_mail_super_admin_messages($blog_public_new);			
 
 			$email =  stripslashes( get_site_option('admin_email') );
+			$email = apply_filters( 'ds_notification_recipients' , $mail );
 			$subject = __('Site ', $this->l10n_prefix).$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', '. __('changed reading visibility setting from ', $this->l10n_prefix) . $from_old . __(' to ', $this->l10n_prefix) . $to_new;
 			$message = __('Site ', $this->l10n_prefix).$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', '.__('changed reading visibility setting from ', $this->l10n_prefix) .$from_old. __(' to ', $this->l10n_prefix) .$to_new;
 			$headers = 'Auto-Submitted: auto-generated';
@@ -191,19 +192,19 @@ class ds_more_privacy_options {
 
 	function ds_mail_super_admin_messages($blog_public) {
 			if ( '1' == $blog_public ) {
-				return __('Visible(1)', $this->l10n_prefix);
+				return __('Visible', $this->l10n_prefix);
 			}
 			if ( '0' == $blog_public ) {
-				return __('No Search(0)', $this->l10n_prefix);
+				return __('No Search', $this->l10n_prefix);
 			}
 			if ( '-1' == $blog_public ) {
-				return __('Network Users Only(-1)', $this->l10n_prefix);
+				return __('Network Users Only', $this->l10n_prefix);
 			}
 			if ( '-2' == $blog_public ) {
-				return __('Site Members Only(-2)', $this->l10n_prefix);
+				return __('Site Members Only', $this->l10n_prefix);
 			}
 			if ( '-3' == $blog_public ) {
-				return __('Site Admins Only(-3)', $this->l10n_prefix);
+				return __('Site Admins Only', $this->l10n_prefix);
 			}
 	}	
 
@@ -286,15 +287,15 @@ class ds_more_privacy_options {
 		<tr>
 			<th><?php _e( 'More Privacy Options', $this->l10n_prefix); ?></th>
 			<td>
-				<input type='radio' name='option[blog_public]' value='1' <?php if( $details->public == '1' ) echo " checked"?>> <?php _e('Visible(1)', $this->l10n_prefix) ?>
+				<input type='radio' name='option[blog_public]' value='1' <?php if( $details->public == '1' ) echo " checked"?>> <?php _e('Visible', $this->l10n_prefix) ?>
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='0' <?php if( $details->public == '0' ) echo " checked"?>> <?php _e('No Search(0)', $this->l10n_prefix) ?>    
+	    		<input type='radio' name='option[blog_public]' value='0' <?php if( $details->public == '0' ) echo " checked"?>> <?php _e('No Search', $this->l10n_prefix) ?>    
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='-1' <?php if( $details->public == '-1' ) echo " checked"?>> <?php _e('Network Users Only(-1)', $this->l10n_prefix) ?>
+	    		<input type='radio' name='option[blog_public]' value='-1' <?php if( $details->public == '-1' ) echo " checked"?>> <?php _e('Network Users Only', $this->l10n_prefix) ?>
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='-2' <?php if( $details->public == '-2' ) echo " checked"?>> <?php _e('Site Members Only(-2)', $this->l10n_prefix) ?>
+	    		<input type='radio' name='option[blog_public]' value='-2' <?php if( $details->public == '-2' ) echo " checked"?>> <?php _e('Site Members Only', $this->l10n_prefix) ?>
 				<br />
-		   		<input type='radio' name='option[blog_public]' value='-3' <?php if( $details->public == '-3' ) echo " checked"?>> <?php _e('Site Admins Only(-3)', $this->l10n_prefix) ?>
+		   		<input type='radio' name='option[blog_public]' value='-3' <?php if( $details->public == '-3' ) echo " checked"?>> <?php _e('Site Admins Only', $this->l10n_prefix) ?>
 			</td>
 		</tr>
 		<?php
@@ -312,19 +313,19 @@ class ds_more_privacy_options {
 		$details = get_blog_details($blog_id);
 
 			if ( '1' == $details->public ) {
-				_e('Visible(1)', $this->l10n_prefix);
+				_e('Visible', $this->l10n_prefix);
 			}
 			if ( '0' == $details->public ) {
-				_e('No Search(0)', $this->l10n_prefix);
+				_e('No Search', $this->l10n_prefix);
 			}
 			if ( '-1' == $details->public ) {
-				_e('Network Users Only(-1)', $this->l10n_prefix);
+				_e('Network Users Only', $this->l10n_prefix);
 			}
 			if ( '-2' == $details->public ) {
-				_e('Site Members Only(-2)', $this->l10n_prefix);
+				_e('Site Members Only', $this->l10n_prefix);
 			}
 			if ( '-3' == $details->public ) {
-				_e('Site Admins Only(-3)', $this->l10n_prefix);
+				_e('Site Admins Only', $this->l10n_prefix);
 			}
 			echo '<br class="clear" />';
 	}
@@ -332,19 +333,19 @@ class ds_more_privacy_options {
 	function wpmu_blogs_add_privacy_options_messages() {
 		global $blog;
 			if ( '1' == $blog[ 'public' ] ) {
-				_e('Visible(1)', $this->l10n_prefix);
+				_e('Visible', $this->l10n_prefix);
 			}
 			if ( '0' == $blog[ 'public' ] ) {
-				_e('No Search(0)', $this->l10n_prefix);
+				_e('No Search', $this->l10n_prefix);
 			}
 			if ( '-1' == $blog[ 'public' ] ) {
-				_e('Network Users Only(-1)', $this->l10n_prefix);
+				_e('Network Users Only', $this->l10n_prefix);
 			}
 			if ( '-2' == $blog[ 'public' ] ) {
-				_e('Site Members Only(-2)', $this->l10n_prefix);
+				_e('Site Members Only', $this->l10n_prefix);
 			}
 			if ( '-3' == $blog[ 'public' ] ) {
-				_e('Site Admins Only(-3)', $this->l10n_prefix);
+				_e('Site Admins Only', $this->l10n_prefix);
 			}
 			echo '<br class="clear" />';
 	}
