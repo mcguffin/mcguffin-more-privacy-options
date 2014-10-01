@@ -93,7 +93,6 @@ Oh, and is it even necessary to show a robots.txt to spiders if the blog is priv
 */
 
 class ds_more_privacy_options {
-		var $l10n_prefix;
 
 	function ds_more_privacy_options() {
 		global  $current_blog;
@@ -184,7 +183,7 @@ class ds_more_privacy_options {
 			$email =  stripslashes( get_site_option('admin_email') );
 			$email = apply_filters( 'ds_notification_recipients' , $mail );
 			$subject = __('Site ', 'more-privacy-options').$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', '. __('changed reading visibility setting from ', 'more-privacy-options') . $from_old . __(' to ', 'more-privacy-options') . $to_new;
-			$message = __('Site ', 'more-privacy-options').$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', '.__('changed reading visibility setting from ', 'more-privacy-options') .$from_old. __(' to ', 'more-privacy-options') .$to_new;
+			$message = __('Site ', 'more-privacy-options').$blogname.'('.$blog_id.'), http://'.$current_blog->domain.$current_blog->path . ', '. __('changed reading visibility setting from ', 'more-privacy-options') .$from_old. __(' to ', 'more-privacy-options') .$to_new;
 			$headers = 'Auto-Submitted: auto-generated';
  		wp_mail($email, $subject, $message, $headers);
 	}

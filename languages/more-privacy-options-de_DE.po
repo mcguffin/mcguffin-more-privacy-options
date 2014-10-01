@@ -1,0 +1,172 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: McGuffins More Privacy Options v3.9.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-16 18:20-0700\n"
+"PO-Revision-Date: 2014-10-01 20:52:16+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-Language: \n"
+"X-Poedit-Country: \n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: ds_wp3_private_blog.php:185
+#: ds_wp3_private_blog.php:186
+#@ more-privacy-options
+msgid "Site "
+msgstr ""
+
+#: ds_wp3_private_blog.php:185
+#: ds_wp3_private_blog.php:186
+#@ more-privacy-options
+msgid "changed reading visibility setting from "
+msgstr ""
+
+#: ds_wp3_private_blog.php:185
+#: ds_wp3_private_blog.php:186
+#@ more-privacy-options
+msgid " to "
+msgstr ""
+
+#: ds_wp3_private_blog.php:286
+#@ more-privacy-options
+msgid "More Privacy Options"
+msgstr "More Privacy Options"
+
+#: ds_wp3_private_blog.php:318
+#@ default
+msgctxt "column name"
+msgid "<nobr>Visibility</nobr>"
+msgstr ""
+
+#: ds_wp3_private_blog.php:374
+#: ds_wp3_private_blog.php:438
+#: ds_wp3_private_blog.php:443
+#: ds_wp3_private_blog.php:447
+#: ds_wp3_private_blog.php:616
+#@ more-privacy-options
+msgid "Visible only to registered users of this network"
+msgstr "Nur für registrierte Benutzer dieses Netzwerks sichtbar"
+
+#: ds_wp3_private_blog.php:378
+#: ds_wp3_private_blog.php:532
+#: ds_wp3_private_blog.php:542
+#: ds_wp3_private_blog.php:546
+#@ more-privacy-options
+msgid "Visible only to registered users of this site"
+msgstr "Nur für registrierte Benutzer dieser Site sichtbar"
+
+#: ds_wp3_private_blog.php:382
+#: ds_wp3_private_blog.php:588
+#: ds_wp3_private_blog.php:593
+#: ds_wp3_private_blog.php:597
+#@ more-privacy-options
+msgid "Visible only to administrators of this site"
+msgstr "Nur für Administratoren dieser Site sichtbar"
+
+#: ds_wp3_private_blog.php:461
+#: ds_wp3_private_blog.php:612
+#@ more-privacy-options
+msgid "Site Visibility"
+msgstr "Sichtbarkeit"
+
+#: ds_wp3_private_blog.php:535
+#@ more-privacy-options
+msgid "To become a member of this site, contact"
+msgstr "To become a member of this site, contact"
+
+#: ds_wp3_private_blog.php:535
+#@ more-privacy-options
+msgid " Site Membership at "
+msgstr ""
+
+#: ds_wp3_private_blog.php:568
+#@ more-privacy-options
+msgid "Visit"
+msgstr ""
+
+#: ds_wp3_private_blog.php:568
+#@ more-privacy-options
+msgid "to continue"
+msgstr ""
+
+#: ds_wp3_private_blog.php:608
+#@ more-privacy-options
+msgid "Network Visibility Selector"
+msgstr "Sichtbarkeit im Netzwerk"
+
+#: ds_wp3_private_blog.php:621
+#@ more-privacy-options
+msgid "Default: visibility managed per site."
+msgstr "Standard: Sichtbarkeit wird pro Site festgelegt."
+
+#: ds_wp3_private_blog.php:193
+#: ds_wp3_private_blog.php:290
+#: ds_wp3_private_blog.php:329
+#: ds_wp3_private_blog.php:349
+#: ds_wp3_private_blog.php:638
+#@ more-privacy-options
+msgid "Visible"
+msgstr "Sichtbar"
+
+#: ds_wp3_private_blog.php:196
+#: ds_wp3_private_blog.php:295
+#: ds_wp3_private_blog.php:332
+#: ds_wp3_private_blog.php:352
+#: ds_wp3_private_blog.php:639
+#@ more-privacy-options
+msgid "No Search"
+msgstr "Suchmaschinen ausschließen"
+
+#: ds_wp3_private_blog.php:199
+#: ds_wp3_private_blog.php:300
+#: ds_wp3_private_blog.php:335
+#: ds_wp3_private_blog.php:355
+#: ds_wp3_private_blog.php:640
+#@ more-privacy-options
+msgid "Network Users Only"
+msgstr "Nur Netzwerk benutzer"
+
+#: ds_wp3_private_blog.php:202
+#: ds_wp3_private_blog.php:305
+#: ds_wp3_private_blog.php:338
+#: ds_wp3_private_blog.php:358
+#: ds_wp3_private_blog.php:641
+#@ more-privacy-options
+msgid "Site Members Only"
+msgstr "Nur Blog-Mitglieder"
+
+#: ds_wp3_private_blog.php:205
+#: ds_wp3_private_blog.php:310
+#: ds_wp3_private_blog.php:341
+#: ds_wp3_private_blog.php:361
+#: ds_wp3_private_blog.php:642
+#@ more-privacy-options
+msgid "Site Admins Only"
+msgstr "Nur Blog-Admins"
+
+#: ds_wp3_private_blog.php:508
+#@ more-privacy-options
+msgid "Click"
+msgstr "Klick"
+
+#: ds_wp3_private_blog.php:508
+#@ more-privacy-options
+msgid " to continue"
+msgstr ""
+
+#: ds_wp3_private_blog.php:647
+#@ more-privacy-options
+msgid "Default visibility"
+msgstr "Standard Sichbarkeit"
+
