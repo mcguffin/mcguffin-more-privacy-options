@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: McGuffins More Privacy Options v3.9.1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-16 18:20-0700\n"
-"PO-Revision-Date: 2014-10-01 20:52:16+0000\n"
+"PO-Revision-Date: 2014-10-01 20:57:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "Suchmaschinen ausschließen"
 #: ds_wp3_private_blog.php:640
 #@ more-privacy-options
 msgid "Network Users Only"
-msgstr "Nur Netzwerk benutzer"
+msgstr "Nur Netzwerkbenutzer"
 
 #: ds_wp3_private_blog.php:202
 #: ds_wp3_private_blog.php:305
