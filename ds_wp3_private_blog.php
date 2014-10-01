@@ -287,15 +287,30 @@ class ds_more_privacy_options {
 		<tr>
 			<th><?php _e( 'More Privacy Options', $this->l10n_prefix); ?></th>
 			<td>
-				<input type='radio' name='option[blog_public]' value='1' <?php if( $details->public == '1' ) echo " checked"?>> <?php _e('Visible', $this->l10n_prefix) ?>
+				<label for="more-privacy1">
+				<input type='radio' id="more-privacy1" name='option[blog_public]' value='1' <?php if( $details->public == '1' ) echo " checked"?>>
+				<?php _e('Visible', $this->l10n_prefix) ?>
+				</label>
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='0' <?php if( $details->public == '0' ) echo " checked"?>> <?php _e('No Search', $this->l10n_prefix) ?>    
+				<label for="more-privacy0">
+	    		<input type='radio' id="more-privacy0" name='option[blog_public]' value='0' <?php if( $details->public == '0' ) echo " checked"?>>
+	    		<?php _e('No Search', $this->l10n_prefix) ?>    
+				</label>
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='-1' <?php if( $details->public == '-1' ) echo " checked"?>> <?php _e('Network Users Only', $this->l10n_prefix) ?>
+				<label for="more-privacy-1">
+	    		<input type='radio' id="more-privacy-1" name='option[blog_public]' value='-1' <?php if( $details->public == '-1' ) echo " checked"?>>
+	    		<?php _e('Network Users Only', $this->l10n_prefix) ?>
+				</label>
 				<br />
-	    		<input type='radio' name='option[blog_public]' value='-2' <?php if( $details->public == '-2' ) echo " checked"?>> <?php _e('Site Members Only', $this->l10n_prefix) ?>
+				<label for="more-privacy-2">
+	    		<input type='radio' id="more-privacy-2" name='option[blog_public]' value='-2' <?php if( $details->public == '-2' ) echo " checked"?>>
+	    		<?php _e('Site Members Only', $this->l10n_prefix) ?>
+				</label>
 				<br />
-		   		<input type='radio' name='option[blog_public]' value='-3' <?php if( $details->public == '-3' ) echo " checked"?>> <?php _e('Site Admins Only', $this->l10n_prefix) ?>
+				<label for="more-privacy-3">
+		   		<input type='radio' id="more-privacy-3" name='option[blog_public]' value='-3' <?php if( $details->public == '-3' ) echo " checked"?>>
+		   		<?php _e('Site Admins Only', $this->l10n_prefix) ?>
+				</label>
 			</td>
 		</tr>
 		<?php
@@ -608,7 +623,7 @@ class ds_more_privacy_options {
 			' . __('Default: visibility managed per site.', $this->l10n_prefix) . '
 			</label><br />';
 
-		echo '</td>			
+		echo '</td>
 		</tr>
 		</table>'; 
 	}
