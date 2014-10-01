@@ -603,7 +603,7 @@ class ds_more_privacy_options {
 	}
 	
 	function sitewide_privacy_update() {
-		update_site_option('ds_sitewide_privacy', $_POST['ds_sitewide_privacy']);
+		update_site_option('ds_sitewide_privacy', intval($_POST['ds_sitewide_privacy']));
 	}
 }
 
