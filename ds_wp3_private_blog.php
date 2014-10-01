@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: More Privacy Options
-Plugin URI:	http://wordpress.org/extend/plugins/more-privacy-options/
+Plugin URI:	https://github.com/mcguffin/more-privacy-options
 Version: 3.9.1.1
 Description: Add more privacy(visibility) options to a WordPress Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default.
 Author: D. Sader
