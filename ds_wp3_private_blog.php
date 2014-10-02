@@ -644,7 +644,7 @@ class ds_more_privacy_options {
 		
 		?><table class="form-table">
 			<tr valign="top"> 
-				<th scope="row"><?php _e( 'Default visibility', 'more-privacy-options'); ?></th>
+				<th scope="row"><?php _e( 'Default visibility for new Blogs', 'more-privacy-options'); ?></th>
 				<td><?php
 					foreach ( $visiblity_options as $value => $label ) {
 					?>
