@@ -128,14 +128,14 @@ class ds_more_privacy_options {
 		if (( '-1' == $current_blog->public ) || ($number == '-1')) {
 			
 			//wp_is_mobile() ? is send_headers or template_redirect better for mobiles?
-				add_action('template_redirect', array(&$this, 'ds_users_authenticator'));
+				add_action('init', array(&$this, 'ds_users_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_users_authenticator'));
 			//	add_action('login_form', array(&$this, 'registered_users_login_message')); 
 				add_filter('privacy_on_link_title', array(&$this, 'registered_users_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_users_header_link') );
 		}
 		if ( '-2' == $current_blog->public ) {
-				add_action('template_redirect', array(&$this, 'ds_members_authenticator'));
+				add_action('init', array(&$this, 'ds_members_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_members_authenticator'));
 			//	add_action('login_form', array(&$this, 'registered_members_login_message')); 
 				add_filter('privacy_on_link_title', array(&$this, 'registered_members_header_title'));
@@ -143,7 +143,7 @@ class ds_more_privacy_options {
 
 		}
 		if ( '-3' == $current_blog->public ) {
-				add_action('template_redirect', array(&$this, 'ds_admins_authenticator'));
+				add_action('init', array(&$this, 'ds_admins_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_admins_authenticator'));
 			//	add_action('login_form', array(&$this, 'registered_admins_login_message'));
 				add_filter('privacy_on_link_title', array(&$this, 'registered_admins_header_title'));
@@ -414,6 +414,8 @@ class ds_more_privacy_options {
 	}
 	
 	function ds_users_authenticator () {
+		if ( $this->is_login() )
+			return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
@@ -492,6 +494,8 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	function ds_members_authenticator() {
 		global $current_user, $blog_id;
+		if ( $this->is_login() )
+			return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
@@ -550,6 +554,8 @@ class ds_more_privacy_options {
 	//---Functions for Admins Only Blog--------------------------------------//
 	//---WARNING: member users, if they exist, still see the backend---------//
 	function ds_admins_authenticator() {
+		if ( $this->is_login() )
+			return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
@@ -666,6 +672,10 @@ class ds_more_privacy_options {
 		switch_to_blog( $blog_id );
 		update_option( 'blog_public' , $public );
 		restore_current_blog();
+	}
+
+	function is_login() {
+		return isset($GLOBALS['pagenow']) && in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) );
 	}
 
 }
