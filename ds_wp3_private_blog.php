@@ -498,12 +498,16 @@ class ds_more_privacy_options {
 		global $current_user, $blog_id;
 		if ( $this->is_login() )
 			return;
+/*
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
-		exit();
+			exit();
 		}
+/*/
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+//*/
 
 		if( is_user_member_of_blog( $current_user->ID, $blog_id ) || is_super_admin() ) {
 			 return;
@@ -558,12 +562,16 @@ class ds_more_privacy_options {
 	function ds_admins_authenticator() {
 		if ( $this->is_login() )
 			return;
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
+/*
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
-		exit();
+			exit();
 		}
+/*/
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+//*/
 
 		if( current_user_can( 'manage_options' ) || is_super_admin() ) {
 			 return;
