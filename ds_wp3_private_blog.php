@@ -416,14 +416,16 @@ class ds_more_privacy_options {
 	function ds_users_authenticator () {
 		if ( $this->is_login() )
 			return;
+/*
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
-		exit();
+			exit();
 		}
-
-
+/*/
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+//*/
 		if ( !is_user_logged_in() ) {
 			if( is_feed() ) {
 				$this->ds_feed_login();
