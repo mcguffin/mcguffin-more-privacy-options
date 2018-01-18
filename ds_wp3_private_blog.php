@@ -26,10 +26,10 @@ To allow everyone who is on-campus into the blog, while requiring those off-camp
 Such as this:
 
 if (     (strncmp('155.47.', $_SERVER['REMOTE_ADDR'], 7 ) == 0)  || (is_user_logged_in())                  ) {
-        // user is either logged in or at campus 
+        // user is either logged in or at campus
                 }
 else {
-        // user is either not logged in or at campus      
+        // user is either not logged in or at campus
 
       if( is_feed() ) {
 ...
@@ -69,9 +69,9 @@ Third, you could redirect any url match to the main page wp-activate.php, but th
 
 // at any rate using url matching was dumb - adding wp-activate.php to any url bypassed the login auth - so a redirect to main site may help - provided the main site isn't also private.
 //		if( strpos($_SERVER['REQUEST_URI'], 'wp-activate.php')  && !is_main_site()) { //DO NOT DO THIS!
-	
+
 So, better may be PHP_SELF since we can wait for script to execute before deciding to auth_redirect it.
-	
+
 //		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php')  && !is_main_site()) {
 //			$destination = network_home_url('wp-activate.php');
 //			wp_redirect( $destination );
@@ -86,7 +86,7 @@ Finally, changing the hook to fire at send_headers rather than template_redirect
 So, I have the private functions the way I actually use them on my private sites/networks. I also do many activations as the SiteAdmin manually using other plugins.
 Therefore, the code in this revision may make blogs more private, but somewhat more inconvenient to activate, both features I desire.
 
-We'll see how the feedback trickles in on this issue. 
+We'll see how the feedback trickles in on this issue.
 
 Oh, and is it even necessary to show a robots.txt to spiders if the blog is private anyway?
 
@@ -94,7 +94,7 @@ Oh, and is it even necessary to show a robots.txt to spiders if the blog is priv
 
 class ds_more_privacy_options {
 
-	function ds_more_privacy_options() {
+	function __construct() {
 		global  $current_blog;
 
 
@@ -109,7 +109,7 @@ class ds_more_privacy_options {
 			// Network->Settings (default visibility)
 				add_action( 'update_wpmu_options', array(&$this, 'default_visibility_update'));
 				add_action( 'wpmu_options', array(&$this, 'default_visibility_options_page'));
-			
+
 			// apply default visibility to new blogs
 				add_action( 'wpmu_new_blog', array( &$this , 'set_new_blog_visibility' ) , 10 , 6 );
 
@@ -126,18 +126,18 @@ class ds_more_privacy_options {
 		$number = intval(get_site_option('ds_sitewide_privacy'));
 
 		if (( '-1' == $current_blog->public ) || ($number == '-1')) {
-			
+
 			//wp_is_mobile() ? is send_headers or template_redirect better for mobiles?
 				add_action('init', array(&$this, 'ds_users_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_users_authenticator'));
-			//	add_action('login_form', array(&$this, 'registered_users_login_message')); 
+			//	add_action('login_form', array(&$this, 'registered_users_login_message'));
 				add_filter('privacy_on_link_title', array(&$this, 'registered_users_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_users_header_link') );
 		}
 		if ( '-2' == $current_blog->public ) {
 				add_action('init', array(&$this, 'ds_members_authenticator'));
 			//	add_action('send_headers', array(&$this, 'ds_members_authenticator'));
-			//	add_action('login_form', array(&$this, 'registered_members_login_message')); 
+			//	add_action('login_form', array(&$this, 'registered_members_login_message'));
 				add_filter('privacy_on_link_title', array(&$this, 'registered_members_header_title'));
 				add_filter('privacy_on_link_text', array(&$this, 'registered_members_header_link') );
 
@@ -150,7 +150,7 @@ class ds_more_privacy_options {
 				add_filter('privacy_on_link_text', array(&$this, 'registered_admins_header_link') );
 		}
 
-			// fixes robots.txt rules 
+			// fixes robots.txt rules
 				add_action('do_robots', array(&$this, 'do_robots'),1);
 
 			// fixes noindex meta as well
@@ -165,20 +165,20 @@ class ds_more_privacy_options {
 				 add_action('signup_blogform', array(&$this, 'add_privacy_options'));
 
 	}
-	
+
 	function ds_localization_init() {
 		load_plugin_textdomain( 'more-privacy-options', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/');
 	}
-	
+
 	function ds_mail_super_admin() {
 		global $wpdb, $blogname, $current_blog;
 			$blog_id = $wpdb->blogid;
 			$blog_public_old = $current_blog->public;
 			$blog_public_new = get_blog_option($blog_id,'blog_public');
-			
+
 			$from_old = $this->ds_mail_super_admin_messages($blog_public_old);
-						
-			$to_new = $this->ds_mail_super_admin_messages($blog_public_new);			
+
+			$to_new = $this->ds_mail_super_admin_messages($blog_public_new);
 
 			$email =  stripslashes( get_site_option('admin_email') );
 			$email = apply_filters( 'ds_notification_recipients' , $mail );
@@ -204,7 +204,7 @@ class ds_more_privacy_options {
 			if ( '-3' == $blog_public ) {
 				return __('Site Admins Only', 'more-privacy-options');
 			}
-	}	
+	}
 
 	function do_robots2() {
 		remove_action('do_robots', 'do_robots');
@@ -226,8 +226,8 @@ class ds_more_privacy_options {
 
 	echo apply_filters('robots_txt', $output, $public);
 	}
-	
-	
+
+
 	function do_robots() {
 		remove_action( 'do_robots', 'do_robots' );
 
@@ -258,7 +258,7 @@ class ds_more_privacy_options {
 		}
 
 	      echo apply_filters('robots_txt', $output, $public);
-	}	
+	}
 
 	function noindex() {
 		remove_action( 'login_head', 'noindex' );
@@ -279,7 +279,7 @@ class ds_more_privacy_options {
 
 	//------------------------------------------------------------------------//
 	//---Functions hooked into site_settings.php---------------------------------//
-	function wpmu_blogs_add_privacy_options() { 
+	function wpmu_blogs_add_privacy_options() {
 		global $details,$options;
 		?>
 		<tr>
@@ -292,7 +292,7 @@ class ds_more_privacy_options {
 				<br />
 				<label for="more-privacy0">
 	    		<input type='radio' id="more-privacy0" name='option[blog_public]' value='0' <?php if( $details->public == '0' ) echo " checked"?>>
-	    		<?php _e('No Search', 'more-privacy-options') ?>    
+	    		<?php _e('No Search', 'more-privacy-options') ?>
 				</label>
 				<br />
 				<label for="more-privacy-1">
@@ -366,8 +366,8 @@ class ds_more_privacy_options {
 	//------------------------------------------------------------------------//
 	//---Functions hooked into blog visibility selector(options-reading.php)-----//
 	//------------------------------------------------------------------------//
-	function add_privacy_options($options) { 
-		global $blogname,$current_site; 
+	function add_privacy_options($options) {
+		global $blogname,$current_site;
 		$blog_name = get_bloginfo('name', 'display');
 		?>
 			<label class="checkbox" for="blog-private-1">
@@ -381,7 +381,7 @@ class ds_more_privacy_options {
 			<label class="checkbox" for="blog-private-3">
 				<input id="blog-private-3" type="radio" name="blog_public" value="-3" <?php checked('-3', get_option('blog_public')); ?> /><?php _e('Visible only to administrators of this site', 'more-privacy-options'); ?>
 			</label>
-			<?php 
+			<?php
 	}
 
 	//------------------------------------------------------------------------//
@@ -410,21 +410,21 @@ class ds_more_privacy_options {
  		               header( 'WWW-Authenticate: Basic realm="' . $_SERVER['SERVER_NAME'] . '"' );
  		               header( 'HTTP/1.0 401 Unauthorized' );
  		               die();
-					}   	       
+					}
 	}
-	
+
 	function ds_users_authenticator () {
 		if ( $this->is_login() )
 			return;
 /*
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
 			exit();
 		}
 /*/
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;
 //*/
 		if ( !is_user_logged_in() ) {
 			if( is_feed() ) {
@@ -435,18 +435,18 @@ class ds_more_privacy_options {
 			}
 		}
 	}
-	
+
 	function registered_users_login_message () {
 		global $current_site;
 		echo '<p>';
 		echo __('Visible only to registered users of this network', 'more-privacy-options');
 		echo '</p><br/>';
 	}
-	
+
 	function registered_users_header_title () {
 		return __('Visible only to registered users of this network', 'more-privacy-options');
 	}
-	
+
 	function registered_users_header_link () {
 		return __('Visible only to registered users of this network', 'more-privacy-options');
 	}
@@ -499,20 +499,20 @@ class ds_more_privacy_options {
 		if ( $this->is_login() )
 			return;
 /*
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
 			exit();
 		}
 /*/
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;
 //*/
 
 		if( is_user_member_of_blog( $current_user->ID, $blog_id ) || is_super_admin() ) {
 			 return;
 		} else {
-				if ( is_user_logged_in() ) {	      	
+				if ( is_user_logged_in() ) {
 					$this->ds_login_header(); ?>
 					<form name="loginform" id="loginform" />
 						<p><a href="<?php if (!is_user_logged_in()) { echo wp_login_url(); } else { echo network_home_url(); } ?>"><?php echo __('Click', 'more-privacy-options').'</a>'. __(' to continue', 'more-privacy-options'); ?>.</p>
@@ -521,12 +521,12 @@ class ds_more_privacy_options {
 				</div>
 			</body>
 		</html>
-		<?php 
+		<?php
 			exit();
 		} else {
 					if( is_feed()) {
     	       	$this->ds_feed_login();
-    	       	
+
 		   	    } else {
 		do_action( 'ds_before_auth_redirect' );
 		auth_redirect();
@@ -534,7 +534,7 @@ class ds_more_privacy_options {
 			}
 		}
 	}
-	
+
 	function registered_members_login_message() {
 		global $current_site;
 		echo '<p>';
@@ -547,11 +547,11 @@ class ds_more_privacy_options {
 		}
 		echo '</p><br/>';
 	}
-	
+
 	function registered_members_header_title() {
 		return __('Visible only to registered users of this site', 'more-privacy-options');
 	}
-	
+
 	function registered_members_header_link() {
 		return __ ('Visible only to registered users of this site', 'more-privacy-options');
 	}
@@ -563,20 +563,20 @@ class ds_more_privacy_options {
 		if ( $this->is_login() )
 			return;
 /*
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && is_main_site()) return;
 		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') && !is_main_site()) {
 			$destination = network_home_url('wp-activate.php');
 			wp_redirect( $destination );
 			exit();
 		}
 /*/
-		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;		
+		if( strpos($_SERVER['PHP_SELF'], 'wp-activate.php') ) return;
 //*/
 
 		if( current_user_can( 'manage_options' ) || is_super_admin() ) {
 			 return;
 		} else {
-		
+
 		if (( is_user_logged_in() )) {
 			$this->ds_login_header(); ?>
 						<form name="loginform" id="loginform" />
@@ -586,7 +586,7 @@ class ds_more_privacy_options {
 					</div>
 				</body>
 			</html>
-			<?php 
+			<?php
 			exit();
 		} else {
 					if( is_feed()) {
@@ -598,17 +598,17 @@ class ds_more_privacy_options {
 			}
 		}
 	}
-	
+
 	function registered_admins_login_message() {
 		echo '<p>';
 		echo __('Visible only to administrators of this site', 'more-privacy-options');
 		echo '</p><br/>';
-	}	
-	
+	}
+
 	function registered_admins_header_title() {
 		return __('Visible only to administrators of this site', 'more-privacy-options');
 	}
-	
+
 	function registered_admins_header_link() {
 		return __('Visible only to administrators of this site', 'more-privacy-options');
 	}
@@ -624,7 +624,7 @@ class ds_more_privacy_options {
 		echo '<h3>'. __('Network Visibility Selector', 'more-privacy-options').'</h3>';
 		echo '
 		<table class="form-table">
-		<tr valign="top"> 
+		<tr valign="top">
 			<th scope="row">' . __('Site Visibility', 'more-privacy-options') . '</th><td>';
 
 			$checked = ( $number == "-1" ) ? " checked=''" : "";
@@ -639,17 +639,17 @@ class ds_more_privacy_options {
 
 		echo '</td>
 		</tr>
-		</table>'; 
+		</table>';
 	}
-	
+
 	function sitewide_privacy_update() {
 		update_site_option('ds_sitewide_privacy', intval($_POST['ds_sitewide_privacy']));
 	}
-	
-	
+
+
 	function default_visibility_options_page() {
 		$default_visibility = intval( get_site_option('ds_default_visibility' , 1 ) );
-		
+
 		$visiblity_options = array(
 			'1'  => __('Visible', 'more-privacy-options'),
 			'0'  => __('No Search', 'more-privacy-options'),
@@ -657,9 +657,9 @@ class ds_more_privacy_options {
 			'-2' => __('Site Members Only', 'more-privacy-options'),
 			'-3' => __('Site Admins Only', 'more-privacy-options'),
 		);
-		
+
 		?><table class="form-table">
-			<tr valign="top"> 
+			<tr valign="top">
 				<th scope="row"><?php _e( 'Default visibility for new Blogs', 'more-privacy-options'); ?></th>
 				<td><?php
 					foreach ( $visiblity_options as $value => $label ) {
@@ -691,6 +691,6 @@ class ds_more_privacy_options {
 }
 
 if (class_exists("ds_more_privacy_options")) {
-	$ds_more_privacy_options = new ds_more_privacy_options();	
+	$ds_more_privacy_options = new ds_more_privacy_options();
 }
 ?>
