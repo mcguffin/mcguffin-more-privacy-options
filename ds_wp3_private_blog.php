@@ -258,6 +258,7 @@ class ds_more_privacy_options {
 			$output .= "Disallow: /$dir/themes\n";
 			$output .= "Disallow: /trackback\n";
 			$output .= "Disallow: /comments\n";
+			$output .= "Disallow: /wp-json\n";
 		}
 
 	      echo apply_filters('robots_txt', $output, $public);
