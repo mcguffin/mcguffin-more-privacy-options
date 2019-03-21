@@ -97,6 +97,9 @@ class ds_more_privacy_options {
 	function __construct() {
 		global  $current_blog;
 
+		if ( defined('WP_CLI') && WP_CLI ) {
+			return;
+		}
 
 		//------------------------------------------------------------------------//
 		//---Hooks-----------------------------------------------------------------//
