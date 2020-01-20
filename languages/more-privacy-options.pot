@@ -1,0 +1,157 @@
+# Copyright (C) 2020 D. Sader
+# This file is distributed under the same license as the McGuffins More Privacy Options plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: McGuffins More Privacy Options 3.9.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mcguffin-more-privacy-options\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-01-20T16:27:02+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: more-privacy-options\n"
+
+#. Plugin Name of the plugin
+msgid "McGuffins More Privacy Options"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/mcguffin/mcguffin-more-privacy-options"
+msgstr ""
+
+#. Description of the plugin
+msgid "Add more privacy(visibility) options to a WordPress Multisite Network. Settings->Reading->Visibility:Network Users, Blog Members, or Admins Only. Network Settings->Network Visibility Selector: All Blogs Visible to Network Users Only or Visibility managed per blog as default."
+msgstr ""
+
+#. Author of the plugin
+msgid "D. Sader"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://dsader.snowotherway.org/"
+msgstr ""
+
+#: ds_wp3_private_blog.php:188
+#: ds_wp3_private_blog.php:189
+msgid "Site "
+msgstr ""
+
+#: ds_wp3_private_blog.php:188
+#: ds_wp3_private_blog.php:189
+msgid "changed reading visibility setting from "
+msgstr ""
+
+#: ds_wp3_private_blog.php:188
+#: ds_wp3_private_blog.php:189
+msgid " to "
+msgstr ""
+
+#: ds_wp3_private_blog.php:196
+#: ds_wp3_private_blog.php:294
+#: ds_wp3_private_blog.php:333
+#: ds_wp3_private_blog.php:353
+#: ds_wp3_private_blog.php:658
+msgid "Visible"
+msgstr ""
+
+#: ds_wp3_private_blog.php:199
+#: ds_wp3_private_blog.php:299
+#: ds_wp3_private_blog.php:336
+#: ds_wp3_private_blog.php:356
+#: ds_wp3_private_blog.php:659
+msgid "No Search"
+msgstr ""
+
+#: ds_wp3_private_blog.php:202
+#: ds_wp3_private_blog.php:304
+#: ds_wp3_private_blog.php:339
+#: ds_wp3_private_blog.php:359
+#: ds_wp3_private_blog.php:660
+msgid "Network Users Only"
+msgstr ""
+
+#: ds_wp3_private_blog.php:205
+#: ds_wp3_private_blog.php:309
+#: ds_wp3_private_blog.php:342
+#: ds_wp3_private_blog.php:362
+#: ds_wp3_private_blog.php:661
+msgid "Site Members Only"
+msgstr ""
+
+#: ds_wp3_private_blog.php:208
+#: ds_wp3_private_blog.php:314
+#: ds_wp3_private_blog.php:345
+#: ds_wp3_private_blog.php:365
+#: ds_wp3_private_blog.php:662
+msgid "Site Admins Only"
+msgstr ""
+
+#: ds_wp3_private_blog.php:290
+msgid "More Privacy Options"
+msgstr ""
+
+#: ds_wp3_private_blog.php:378
+#: ds_wp3_private_blog.php:446
+#: ds_wp3_private_blog.php:451
+#: ds_wp3_private_blog.php:455
+#: ds_wp3_private_blog.php:636
+msgid "Visible only to registered users of this network"
+msgstr ""
+
+#: ds_wp3_private_blog.php:382
+#: ds_wp3_private_blog.php:546
+#: ds_wp3_private_blog.php:556
+#: ds_wp3_private_blog.php:560
+msgid "Visible only to registered users of this site"
+msgstr ""
+
+#: ds_wp3_private_blog.php:386
+#: ds_wp3_private_blog.php:608
+#: ds_wp3_private_blog.php:613
+#: ds_wp3_private_blog.php:617
+msgid "Visible only to administrators of this site"
+msgstr ""
+
+#: ds_wp3_private_blog.php:469
+#: ds_wp3_private_blog.php:632
+msgid "Site Visibility"
+msgstr ""
+
+#: ds_wp3_private_blog.php:522
+msgid "Click"
+msgstr ""
+
+#: ds_wp3_private_blog.php:522
+msgid " to continue"
+msgstr ""
+
+#: ds_wp3_private_blog.php:549
+msgid "To become a member of this site, contact"
+msgstr ""
+
+#: ds_wp3_private_blog.php:549
+msgid " Site Membership at "
+msgstr ""
+
+#: ds_wp3_private_blog.php:588
+msgid "Visit"
+msgstr ""
+
+#: ds_wp3_private_blog.php:588
+msgid "to continue"
+msgstr ""
+
+#: ds_wp3_private_blog.php:628
+msgid "Network Visibility Selector"
+msgstr ""
+
+#: ds_wp3_private_blog.php:641
+msgid "Default: visibility managed per site."
+msgstr ""
+
+#: ds_wp3_private_blog.php:667
+msgid "Default visibility for new Blogs"
+msgstr ""

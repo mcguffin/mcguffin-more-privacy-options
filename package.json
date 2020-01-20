@@ -1,0 +1,45 @@
+{
+  "name": "mcguffin-more-privacy-options",
+  "version": "3.9.1",
+  "description": "",
+  "private": true,
+  "author": "POLYPLANET",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": "12.4.0",
+    "npm": "^6.9.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "i18n": "node src/run/json-i18n.js more-privacy-options",
+    "rollback": "git reset --hard HEAD~ && git push origin +master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcguffin/mcguffin-more-privacy-options.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mcguffin/mcguffin-more-privacy-options/issues"
+  },
+  "wporg": {
+    "steps": [
+      "build",
+      "git"
+    ],
+    "type": "plugin",
+    "build": {
+      "prebuild": [
+        "wp i18n make-pot . languages/more-privacy-options.pot --domain=more-privacy-options --exclude=tmp"
+      ],
+      "build": []
+    },
+    "git": {
+      "host": "bitbucket.org",
+      "user": "joernlund"
+    },
+    "wporg": {
+      "assets": ".wporg"
+    }
+  }
+}
